@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 import json
+
 from DouYuSpider.items import DouyuspiderItem
 class DouyuSpider(scrapy.Spider):
     name = 'douyu'
@@ -17,12 +18,11 @@ class DouyuSpider(scrapy.Spider):
 
         for each in data:
             item = DouyuspiderItem()
-            # print type(each["vertical_src"].encode("utf-8"))
-            # print type(each["nickname"].encode("utf-8"))
+
             item["vertical"] = each["vertical_src"].encode("utf-8")
             item["name"] = each["nickname"].encode("utf-8")
-            # item["room_src"] = each["room_src"].encode("utf-8")
-            # item["anchor_city"] = each["anchor_city"].encode("utf-8")
+            item["room_src"] = each["room_src"].encode("utf-8")
+            item["anchor_city"] = each["anchor_city"].encode("utf-8")
 
             yield item
 

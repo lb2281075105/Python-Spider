@@ -66,11 +66,14 @@ DOWNLOAD_DELAY = 3
 # Configure item pipelines
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-   'DouYuSpider.pipelines.DouyuspiderPipeline': 300,
+   # 'DouYuSpider.pipelines.DouyuspiderPipeline': 300,
+   'DouYuSpider.pipelines.DouYuImagesPipelines': 300,
 }
-
+IMAGES_STORE = "/Users/yunmei/Desktop/scrapyenv/Python-Spider/DouYuSpider/Images"
+# 日志
 # LOG_FILE = "dg.log"
 # LOG_LEVEL = "DEBUG"
+
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See http://doc.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True

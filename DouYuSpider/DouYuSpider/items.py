@@ -15,7 +15,9 @@ class DouyuspiderItem(scrapy.Item):
     # 昵称
     name = scrapy.Field()
     # 房间照片
-    # room_src = scrapy.Field()
-    # # 地区
-    # anchor_city = scrapy.Field()
+    room_src = scrapy.Field()
+    # 地区
+    anchor_city = scrapy.Field()
+    imagesPath = scrapy.Field()
+
 

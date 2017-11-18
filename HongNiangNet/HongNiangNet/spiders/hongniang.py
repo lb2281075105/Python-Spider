@@ -1,13 +1,27 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from scrapy.linkextractors import LinkExtractor
-from scrapy.spiders import CrawlSpider, Rule
+# from scrapy.spiders import CrawlSpider, Rule
 from HongNiangNet.items import HongniangnetItem
+# 分布式
+from scrapy.spider import Rule
+from scrapy_redis.spiders import RedisCrawlSpider
 
-class HongniangSpider(CrawlSpider):
+# class HongniangSpider(CrawlSpider):
+class HongniangSpider(RedisCrawlSpider):
+
     name = 'hongniang'
     allowed_domains = ['hongniang.com']
-    start_urls = ['http://www.hongniang.com/match?&page=1']
+    # start_urls = ['http://www.hongniang.com/match?&page=1']
+    redis_key = "hongniangSpider:start_urls"
+
+    # 动态域范围获取
+    def __init__(self, *args, **kwargs):
+        # Dynamically define the allowed domains list.
+        domain = kwargs.pop('domain', '')
+        self.allowed_domains = filter(None, domain.split(','))
+        super(HongniangSpider, self).__init__(*args, **kwargs)
+
     # 每一页匹配规则
     page_links = LinkExtractor(allow=(r"hongniang.com/match?&page=\d+"))
     # 每个人个人主页匹配规则

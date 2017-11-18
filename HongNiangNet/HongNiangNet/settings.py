@@ -14,12 +14,27 @@ BOT_NAME = 'HongNiangNet'
 SPIDER_MODULES = ['HongNiangNet.spiders']
 NEWSPIDER_MODULE = 'HongNiangNet.spiders'
 
+# 分布式爬虫设置Ip端口
+REDIS_HOST = '192.168.19.206'
+REDIS_PORT = 6379
+
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'HongNiangNet (+http://www.yourdomain.com)'
 USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:56.0)'
 # Obey robots.txt rules
 ROBOTSTXT_OBEY = True
+
+
+# 使用了scrapy-redis里的去重组件，不使用scrapy默认的去重
+DUPEFILTER_CLASS = "scrapy_redis.dupefilter.RFPDupeFilter"
+# 使用了scrapy-redis里的调度器组件，不实用scrapy默认的调度器
+SCHEDULER = "scrapy_redis.scheduler.Scheduler"
+# 使用队列形式
+SCHEDULER_QUEUE_CLASS = "scrapy_redis.queue.SpiderQueue"
+# 允许暂停，redis请求记录不丢失
+SCHEDULER_PERSIST = True
+
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
 #CONCURRENT_REQUESTS = 32
@@ -66,6 +81,7 @@ ROBOTSTXT_OBEY = True
 # See http://scrapy.readthedocs.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
    'HongNiangNet.pipelines.HongniangnetPipeline': 300,
+   'scrapy_redis.pipelines.RedisPipeline' : 400,
 }
 
 # Enable and configure the AutoThrottle extension (disabled by default)

@@ -5,3 +5,5 @@
 4、爬虫小demo<br>
 5、Selenium的使用<br>
 6、PIL
+
+详细请移步简书[Python文集](http://www.jianshu.com/nb/18442681)

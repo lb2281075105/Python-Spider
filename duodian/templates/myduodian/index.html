@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        table{
+            border: 1px red solid;
+            margin:  0px auto;
+        }
+        td{
+            width: 140px;
+            height:140px;
+            text-align: center;
+            line-height: 140px;
+        }
+        img{
+            width: 100px;
+            height:100px;
+        }
+    </style>
+</head>
+<body>
+
+<table>
+    <thead>
+        <tr><th>商品图片</th><th>商品名</th><th>价格</th></tr>
+    </thead>
+    <tbody>
+      {% for item in list %}
+         <tr>
+         <td><img src="{{ item.image }}" alt=""></td>
+         <td>{{ item.goodName }}</td>
+         <td>{{ item.price }}</td>
+         </tr>
+      {% endfor %}
+
+    </tbody>
+
+</table>
+
+</body>
+</html>

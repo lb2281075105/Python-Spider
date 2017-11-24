@@ -6,6 +6,7 @@
 5、Selenium的使用<br>
 6、PIL<br>
 7、爬多点商品存储mysql数据库同时显示在djangoweb页面<br>
-8、django开发接口
+8、django开发接口<br>
+9、python txt、csv、xml文件解析
 
 详细请移步简书[Python文集](http://www.jianshu.com/nb/18442681)

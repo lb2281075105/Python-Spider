@@ -119,7 +119,6 @@ class TaoBao():
         except error.URLError as e:
             print(e.reason)
 
-
 if __name__ == '__main__':
     page = 1
     taobao = TaoBao()

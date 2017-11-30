@@ -8,6 +8,7 @@
 7、爬多点商品存储mysql数据库同时显示在djangoweb页面<br>
 8、django开发接口<br>
 9、python txt、csv、xml文件解析<br>
-10、Scrapy框架进行Spiders简单爬虫
+10、Scrapy框架进行Spiders简单爬虫<br>
+11、抓取淘宝美女信息，下载本地并存储mysql数据库
 
 详细请移步简书[Python文集](http://www.jianshu.com/nb/18442681)

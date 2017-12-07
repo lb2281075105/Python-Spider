@@ -9,6 +9,7 @@
 8、django开发接口<br>
 9、python txt、csv、xml文件解析<br>
 10、Scrapy框架进行Spiders简单爬虫<br>
-11、抓取淘宝美女信息，下载本地并存储mysql数据库
+11、抓取淘宝美女信息，下载本地并存储mysql数据库<br>
+12、爬取有缘网用户信息
 
 详细请移步简书[Python文集](http://www.jianshu.com/nb/18442681)

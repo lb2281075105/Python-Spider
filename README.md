@@ -15,6 +15,8 @@
 14、selenium动态模拟登录<br>
 15、模拟知乎登录<br>
 16、爬取tencent社招信息<br>
-17、[爬取《多点》整站商品信息](https://github.com/lb2281075105/LBDuoDian)
+17、[爬取《多点》整站商品信息](https://github.com/lb2281075105/LBDuoDian)<br>
+18、模拟京东登录<br>
+19、下载网易云歌词<br>
 
 详细请移步简书[Python文集](http://www.jianshu.com/nb/18442681)

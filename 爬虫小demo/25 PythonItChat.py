@@ -1,4 +1,19 @@
 #coding=utf-8
+'''
+itchat:获取分享给群或者个人的技术文章
+(0) 熟悉itchat,(https://www.cnblogs.com/Chenjiabing/p/6907397.html)
+(1) itchat 扫码次数太多会被限制扫码登录微信。
+(2) itchat:获取分享给群或者个人的技术文章,提取出文章链接、文章标题、文章首页图片、文章内容
+(3) 通过获取到的文章链接，爬虫文章内容。
+(4) 判断是接收方(ToUserName)是谁、发送方(FromUserName)是谁就是通过唯一的ID来判别的。
+(5) python itchat 热登陆(itchat.auto_login(hotReload=True))
+(6) xpath模块爬取文章标题、文章内图片
+(7) 搭建web服务器环境(Mac使用XAMPP)
+(8) pymysql模块自动创建数据库、创建字段、保存内容到字段
+(9) navicat 的使用
+(10) python 相关模块的使用
+'''
+
 
 import itchat
 # import全部消息类型
@@ -9,13 +24,11 @@ import os
 import pymysql
 import json
 
-
 # 连接数据库
 tablename = 'pythonitchat'
 db = pymysql.connect(host='127.0.0.1', user='root', passwd='', db='itchat', charset='utf8')
 cur = db.cursor()
 cur.execute('USE itchat')
-
 
 # 处理个人分享消息
 # 包括文本、位置、名片、通知、分享(49重点)

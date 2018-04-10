@@ -10,9 +10,6 @@ import json
 # 添加一个文件，将已经发送成功的文章标题序列化到文件，防止多次运行导致重复发送邮件
 file_path = 'sent_articles_file'
 
-# 一些敏感词，简单过滤一下
-sensitive_words = ['鄙视链', '中奖名单', '成功说一口流利英语', '婚姻', '恋爱']
-
 ws_api = wechatsogou.WechatSogouAPI()
 
 # 连接数据库

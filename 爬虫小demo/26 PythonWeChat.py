@@ -1,9 +1,5 @@
 #coding=utf8
-import os
 import pickle
-from email.header import Header
-from email.utils import parseaddr, formataddr
-
 import wechatsogou
 import urllib2
 import lxml.etree
@@ -30,12 +26,6 @@ def get_article(gzh):
     articles = ws_api.get_gzh_article_by_history(gzh)
     print(len(articles['article']))
     return articles['article']
-
-# 设置下编码
-def _format_addr(s):
-    name, addr = parseaddr(s)
-    return formataddr((Header(name, 'utf-8').encode(), addr))
-
 
 # 获取网页内容
 def get_html(url):
@@ -86,15 +76,12 @@ cur.execute(
 
 
 if '__main__' == __name__:
-    # 热登录(在一段时间内不用扫码登录还能保持登录状态)
+
     get_connect()
-    print "哈哈"
     
     # 定义一个公众号列表
     gzh_list = ['技术最前线', 'python', '全民独立经纪人', '程序视界', '非著名程序员']
     
-    # 指定邮箱列表，这里有个建议，请邮件列表中将发件人添加到白名单，降低发送的失败率
-    mail_list = ['2281075105@qq.com','lb2281075105@126.com']
     for gzh in gzh_list:
         # 查找公众号之前，先从文件中反序列化出已经成功发送的文章列表
         if os.path.exists(file_path):
@@ -112,11 +99,9 @@ if '__main__' == __name__:
             source = xmlcontent.xpath(
                                       '//span[@class="rich_media_meta rich_media_meta_text rich_media_meta_nickname"]/text()')
                                       time = xmlcontent.xpath('//em[@class="rich_media_meta rich_media_meta_text"]/text()')
-                                      print "来源"
+                                      print "来源、时间"
                                       print source, time
                                       # 下载图片
                                       print "下载图片"
-                                      # print imgArray
-                                      # print title[0]
             get_image(title, imgArray, source, time)
 

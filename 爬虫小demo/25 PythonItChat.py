@@ -15,6 +15,8 @@ itchat:获取分享给群或者个人的技术文章
 '''
 
 
+#coding=utf-8
+
 import itchat
 # import全部消息类型
 from itchat.content import *
@@ -24,11 +26,13 @@ import os
 import pymysql
 import json
 
+
 # 连接数据库
 tablename = 'pythonitchat'
 db = pymysql.connect(host='127.0.0.1', user='root', passwd='', db='itchat', charset='utf8')
 cur = db.cursor()
 cur.execute('USE itchat')
+
 
 # 处理个人分享消息
 # 包括文本、位置、名片、通知、分享(49重点)
@@ -45,26 +49,31 @@ def text_reply(msg):
 
                     imgArray = xmlcontent.xpath('//img[@data-type="png"]/@data-src')
                         # 下载图片
-                        print "下载图片"
-                            # print imgArray
-                            # print title[0]
-                            get_image(title,imgArray)
+                        source = xmlcontent.xpath('//span[@class="rich_media_meta rich_media_meta_text rich_media_meta_nickname"]/text()')
+                        time = xmlcontent.xpath('//em[@class="rich_media_meta rich_media_meta_text"]/text()')
+                        print "来源"
+                            print source, time
+                                # 下载图片
+                                print "下载图片"
+                                    # print imgArray
+                                    # print title[0]
+                                    get_image(title, imgArray, source, time)
 
-                            print msg["Url"]
-                                print "个人分享文章类型编号MsgType:" + "---------------------------"
-                                    print msg["MsgType"]
-                                    print "个人分享Content:" + "---------------------------"
-                                        print msg["Content"]
-                                        print "个人分享FromUserName:" + "---------------------------"
-                                            print msg["FromUserName"]
-                                            print "个人分享ToUserName:" + "---------------------------"
-                                                print msg["ToUserName"]
-                                                print "个人分享链接标题FileName:" + "---------------------------"
-                                                    print msg["FileName"]
-                                                        else:
-                                                            print "不是个人分享的文章"
-                                                                # return msg['Text']
-                                                                itchat.send('%s: %s : %s' % (msg['Type'], msg['Text'],msg['Url']), msg['FromUserName'])
+                                    print msg["Url"]
+                                        print "个人分享文章类型编号MsgType:" + "---------------------------"
+                                            print msg["MsgType"]
+                                            print "个人分享Content:" + "---------------------------"
+                                                print msg["Content"]
+                                                print "个人分享FromUserName:" + "---------------------------"
+                                                    print msg["FromUserName"]
+                                                    print "个人分享ToUserName:" + "---------------------------"
+                                                        print msg["ToUserName"]
+                                                        print "个人分享链接标题FileName:" + "---------------------------"
+                                                            print msg["FileName"]
+                                                                else:
+                                                                    print "不是个人分享的文章"
+                                                                        # return msg['Text']
+                                                                        itchat.send('%s: %s : %s' % (msg['Type'], msg['Text'],msg['Url']), msg['FromUserName'])
 
 # 处理群聊消息
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING], isGroupChat=True)
@@ -75,15 +84,18 @@ def text_reply(msg):
         print msg["Url"]
         
         xmlcontent = lxml.etree.HTML(get_html(msg["Url"]))
-        print xmlcontent
         title = xmlcontent.xpath('//h2[@class="rich_media_title"]/text()')
-        
         imgArray = xmlcontent.xpath('//img[@data-type="png"]/@data-src')
+        # 来源
+        source = xmlcontent.xpath('//span[@class="rich_media_meta rich_media_meta_text rich_media_meta_nickname"]/text()')
+        time = xmlcontent.xpath('//em[@class="rich_media_meta rich_media_meta_text"]/text()')
+        print "来源"
+        print source,time
         # 下载图片
         print "下载图片"
         # print imgArray
         # print title[0]
-        get_image(title,imgArray)
+        get_image(title,imgArray,source,time)
         
         print "群聊分享分享文章类型编号MsgType:" + "---------------------------"
         print msg["MsgType"]
@@ -110,7 +122,7 @@ def get_html(url):
     return html
 
 # 下载图片
-def get_image(title,imgArray):
+def get_image(title,imgArray,source,time):
     if os.path.isdir('./imgs'):
         pass
     else:
@@ -121,8 +133,8 @@ def get_image(title,imgArray):
             file.close
 
 cur.execute(
-            'INSERT INTO ' + tablename + ' (title, img) VALUES (%s, %s)',
-            (title[0].strip().replace("\n", ""), json.dumps(imgArray, ensure_ascii=False)))
+            'INSERT INTO ' + tablename + ' (title, img,source,time) VALUES (%s, %s,%s, %s)',
+            (title[0].strip().replace("\n", ""), json.dumps(imgArray, ensure_ascii=False),source[0].strip().replace("\n", ""),time[0].strip().replace("\n", "")))
 cur.connection.commit()
 print title[0]
 print("------------------------  插入成功  ----------------------------------")
@@ -133,7 +145,7 @@ def get_connect():
     try:
         # 创建表
         cur.execute(
-                    'CREATE TABLE ' + tablename + ' (id BIGINT(7) NOT NULL AUTO_INCREMENT, title VARCHAR(1000), img VARCHAR(1000), created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id))')
+                    'CREATE TABLE ' + tablename + ' (id BIGINT(7) NOT NULL AUTO_INCREMENT, title VARCHAR(1000), img VARCHAR(1000), source VARCHAR(1000), time VARCHAR(1000), created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id))')
     except pymysql.err.InternalError as e:
         print(e)
     # 修改表字段
@@ -144,6 +156,10 @@ cur.execute(
             'ALTER TABLE ' + tablename + ' CHANGE title title VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
     cur.execute(
                 'ALTER TABLE ' + tablename + ' CHANGE img img VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
+                cur.execute(
+                            'ALTER TABLE ' + tablename + ' CHANGE source source VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
+                cur.execute(
+                            'ALTER TABLE ' + tablename + ' CHANGE time time VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
 
 # 热登录(在一段时间内不用扫码登录还能保持登录状态)
 get_connect()

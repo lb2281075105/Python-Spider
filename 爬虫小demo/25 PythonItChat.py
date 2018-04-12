@@ -54,7 +54,7 @@ def text_reply(msg):
                                 print "下载图片"
                                     # print imgArray
                                     # print title[0]
-                                    get_image(title, imgArray, source, time)
+                                    get_image(title, imgArray, source, time,msg["Url"])
                                 
                                     print msg["Url"]
                                         print "个人分享文章类型编号MsgType:" + "---------------------------"
@@ -99,7 +99,7 @@ def text_reply(msg):
         print "下载图片"
         # print imgArray
         # print title[0]
-        get_image(title,imgArray,source,time)
+        get_image(title,imgArray,source,time,msg["Url"])
         
         print "群聊分享文章类型编号MsgType:" + "---------------------------"
         print msg["MsgType"]
@@ -134,7 +134,6 @@ def text_reply(msg):
                 pass
             else:
                 pass
-    
     
         else:
             # 群友发的文章
@@ -173,22 +172,29 @@ def get_html(url):
     return html
 
 # 下载图片
-def get_image(title,imgArray,source,time):
-    if os.path.isdir('./imgs'):
-        pass
+def get_image(title,imgArray,source,time,linkurl):
+    print "标题"
+    result = cur.execute("select url from pythonitchat WHERE url='"+ linkurl + "'")
+    print(str(result) + '------------url-----------')
+    
+    if result:
+        print("数据库里面存在此数据")
     else:
-        os.mkdir("./imgs")
-    for item in imgArray:
-        with open('imgs/' + (item)[-30:].replace('/','-') + ".png", 'a+') as file:
-            file.write(get_html(item))
-            file.close
+        if os.path.isdir('./imgs'):
+            pass
+        else:
+            os.mkdir("./imgs")
+        for item in imgArray:
+            with open('imgs/' + (item)[-30:].replace('/','-') + ".png", 'a+') as file:
+                file.write(get_html(item))
+                file.close
 
 cur.execute(
-            'INSERT INTO ' + tablename + ' (title, img,source,time) VALUES (%s, %s,%s, %s)',
-            (title[0].strip().replace("\n", ""), json.dumps(imgArray, ensure_ascii=False),source[0].strip().replace("\n", ""),time[0].strip().replace("\n", "")))
-cur.connection.commit()
-print title[0]
-print("------------------------  插入成功  ----------------------------------")
+            'INSERT INTO ' + tablename + ' (title,url, img,source,time) VALUES (%s, %s,%s,%s, %s)',
+            (title[0].strip().replace("\n", ""),linkurl, json.dumps(imgArray, ensure_ascii=False),source[0].strip().replace("\n", ""),time[0].strip().replace("\n", "")))
+    cur.connection.commit()
+    print title[0]
+    print("------------------------  插入成功  ----------------------------------")
 
 # 连接数据库
 def get_connect():
@@ -196,7 +202,7 @@ def get_connect():
     try:
         # 创建表
         cur.execute(
-                    'CREATE TABLE ' + tablename + ' (id BIGINT(7) NOT NULL AUTO_INCREMENT, title VARCHAR(1000), img VARCHAR(1000), source VARCHAR(1000), time VARCHAR(1000), created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id))')
+                    'CREATE TABLE ' + tablename + ' (id BIGINT(7) NOT NULL AUTO_INCREMENT, title VARCHAR(1000),url VARCHAR(10000), img VARCHAR(1000), source VARCHAR(1000), time VARCHAR(1000), created TIMESTAMP DEFAULT CURRENT_TIMESTAMP, PRIMARY KEY(id))')
     except pymysql.err.InternalError as e:
         print(e)
     # 修改表字段
@@ -206,11 +212,14 @@ def get_connect():
 cur.execute(
             'ALTER TABLE ' + tablename + ' CHANGE title title VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
     cur.execute(
-                'ALTER TABLE ' + tablename + ' CHANGE img img VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
+                'ALTER TABLE ' + tablename + ' CHANGE url url VARCHAR(10000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
+                cur.execute(
+                            'ALTER TABLE ' + tablename + ' CHANGE img img VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
                 cur.execute(
                             'ALTER TABLE ' + tablename + ' CHANGE source source VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
                 cur.execute(
                             'ALTER TABLE ' + tablename + ' CHANGE time time VARCHAR(1000) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci')
+
 
 # 热登录(在一段时间内不用扫码登录还能保持登录状态)
 get_connect()

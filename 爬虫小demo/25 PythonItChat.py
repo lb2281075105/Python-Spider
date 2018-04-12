@@ -14,9 +14,8 @@ itchat:获取分享给群或者个人的技术文章
 (10) python 相关模块的使用
 '''
 
-
-#coding=utf-8
-
+# 爬取微信群或者是好友分享的文章
+# 监听微信公众号分享的文章
 import itchat
 # import全部消息类型
 from itchat.content import *
@@ -26,13 +25,11 @@ import os
 import pymysql
 import json
 
-
 # 连接数据库
 tablename = 'pythonitchat'
 db = pymysql.connect(host='127.0.0.1', user='root', passwd='', db='itchat', charset='utf8')
 cur = db.cursor()
 cur.execute('USE itchat')
-
 
 # 处理个人分享消息
 # 包括文本、位置、名片、通知、分享(49重点)
@@ -58,7 +55,7 @@ def text_reply(msg):
                                     # print imgArray
                                     # print title[0]
                                     get_image(title, imgArray, source, time)
-
+                                
                                     print msg["Url"]
                                         print "个人分享文章类型编号MsgType:" + "---------------------------"
                                             print msg["MsgType"]
@@ -70,10 +67,17 @@ def text_reply(msg):
                                                         print msg["ToUserName"]
                                                         print "个人分享链接标题FileName:" + "---------------------------"
                                                             print msg["FileName"]
-                                                                else:
-                                                                    print "不是个人分享的文章"
-                                                                        # return msg['Text']
-                                                                        itchat.send('%s: %s : %s' % (msg['Type'], msg['Text'],msg['Url']), msg['FromUserName'])
+
+                                                            # return msg['Text']
+                                                            # itchat.send('%s: %s : %s' % (msg['Type'], msg['Text'],msg['Url']), msg['FromUserName'])
+                                                            print "lalallala"
+                                                                # 获取到的信息是某某人和登录者之间的通讯，如果不是和登录这通讯就获取不到
+                                                                print itchat.search_friends(userName=msg['FromUserName'])['NickName']
+                                                                print itchat.search_friends(userName=msg['ToUserName'])['NickName']
+                                                                    
+                                                                    else:
+                                                                        print "不是个人分享的文章"
+
 
 # 处理群聊消息
 @itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING], isGroupChat=True)
@@ -97,7 +101,7 @@ def text_reply(msg):
         # print title[0]
         get_image(title,imgArray,source,time)
         
-        print "群聊分享分享文章类型编号MsgType:" + "---------------------------"
+        print "群聊分享文章类型编号MsgType:" + "---------------------------"
         print msg["MsgType"]
         print "群聊分享Content:" + "---------------------------"
         print msg["Content"]
@@ -107,12 +111,59 @@ def text_reply(msg):
         print msg["ToUserName"]
         print "群聊分享链接标题FileName:" + "---------------------------"
         print msg["FileName"]
-    # print "分享者昵称ActualNickName:" + "---------------------------"
-    # print msg["ActualNickName"]
+        # print "分享者昵称ActualNickName:" + "---------------------------"
+        # print msg["ActualNickName"]
+        print "lalallala群"
+        # itchat.send('%s: %s : %s' % (msg['Type'], msg['Text'], msg['Url']), msg['FromUserName'])
+        
+        print msg['FromUserName']
+        print msg['ToUserName']
+        
+        receiver = "@123c6bbefef9d63462d989f117152dd0d05e0fe94c82a273ea4238a170eb0862"
+        # "@@df97b8b54074a1c5af029d9f637f2bbc58eb796126285a0c22cb450ac912ff7f"
+        if msg['FromUserName'] == receiver:
+            print "----------- 自己在群里发的文章 ------------"
+            # 自己在群里发的文章
+            print "昵称:"
+            print msg['ActualNickName']
+            print " ----------- "
+            print "群名称:"
+            print itchat.search_chatrooms(userName=msg['ToUserName'])['NickName']
+            chatRoomName = "呵呵各地"
+            if itchat.search_chatrooms(userName=msg['ToUserName'])['NickName'] == chatRoomName:
+                pass
+            else:
+                pass
+    
+    
+        else:
+            # 群友发的文章
+            print "----------- 群友发的文章 -----------"
+            print "昵称:"
+            print msg['ActualNickName']
+            print " ----------- "
+            print "群名称:"
+            print itchat.search_chatrooms(userName=msg['FromUserName'])['NickName']
+            chatRoomName = "呵呵各地"
+            if itchat.search_chatrooms(userName=msg['FromUserName'])['NickName'] == chatRoomName:
+                pass
+            else:
+                pass
+else:
+    print "不是群聊分享的文章"
+# return msg['Text']
+
+
+# 处理微信公众号消息
+@itchat.msg_register([TEXT, MAP, CARD, NOTE, SHARING], isMpChat=True)
+def text_reply(msg):
+    print msg
+    print itchat.search_mps(name='PythonCoder')
+    if msg["MsgType"] == 49:
+        print "监听到制定微信公众号分享的文章链接："
+        print msg["Url"]
     else:
-        print "不是群聊分享的文章"
-    # return msg['Text']
-    itchat.send('%s: %s : %s' % (msg['Type'], msg['Text'], msg['Url']), msg['FromUserName'])
+        print "微信公众号分享的不是文章"
 
 # 获取网页内容
 def get_html(url):

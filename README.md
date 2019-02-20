@@ -24,5 +24,6 @@
 23、itchat 获取微信群或者微信好友分享文章<br>
 24、爬取微信公众号历史文章<br>
 25、itchat监听指定微信公众号分享的文章<br>
+26、itchat微信群微信好友防撤回<br>
 
 详细请移步简书[Python文集](http://www.jianshu.com/nb/18442681)

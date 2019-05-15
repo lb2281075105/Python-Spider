@@ -1,5 +1,6 @@
 # Python-Spider
 
+对您有帮助的希望关注下公众号哦,谢谢
 <img src="gongzhonghao.jpeg" width="375">
 
 1、豆瓣电影top250<br>

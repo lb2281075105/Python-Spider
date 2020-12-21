@@ -26,5 +26,7 @@
 25、itchat监听指定微信公众号分享的文章<br>
 26、itchat微信群微信好友防撤回<br>
 27、在微信群之间转发消息<br>
+27、下载bilibili视频  也可以下载哔哩哔哩集合视频<br>
+
 
 详细请移步简书[Python文集](http://www.jianshu.com/nb/18442681)

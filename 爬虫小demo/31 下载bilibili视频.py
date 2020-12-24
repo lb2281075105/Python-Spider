@@ -1,6 +1,8 @@
 import requests
 from lxml import html
 import re
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 def star(url):
     url2 = "https://api.bilibili.com/x/player/playurl?avid={avid}&cid={cid}&qn=32&type=&otype=json"
@@ -18,7 +20,7 @@ def star(url):
     shuju = size / 1024 / 1024
     print("本视频大小为：%.2fM" % shuju)
 
-    h = re.findall("http://(.+)com",flv_url)
+    h = re.findall("https://(.+)com",flv_url)
     host = h[0]+"com"
 
     headers2["host"] = host
